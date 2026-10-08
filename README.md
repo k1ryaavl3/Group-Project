@@ -1,2 +1,2 @@
 # Group-Project
-Kovalenko`s and Petrov`s group project 
+Kovalenko's and Petrov's group project 
