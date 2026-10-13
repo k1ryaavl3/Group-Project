@@ -17,7 +17,7 @@ int main(void) {
 
     while (!WindowShouldClose()) {
         BeginDrawing();
-        ClearBackground(RAYWHITE);
+        ClearBackground((Color){22, 27, 34, 255});
 
         for (int i = 0; i < MAZE_SIZE; i++) {
             for (int j = 0; j < MAZE_SIZE; j++) {
@@ -27,17 +27,24 @@ int main(void) {
                 if (i >= finish_r && i < finish_r + 2 && j >= finish_c && j < finish_c + 2) {
                     DrawRectangle(x, y, CELL_SIZE, CELL_SIZE, GREEN);
                 } 
+                Color wall_color = LIGHTGRAY; // Default wall color
+                if (maze[i][j].is_zigzag) {
+                    wall_color = GOLD; // жовтий
+                } else if (maze[i][j].is_passage) {
+                    wall_color = RED; // червоний
+                }
+
                 if (maze[i][j].walls & WALL_NORTH) {
-                    DrawLine(x, y, x + CELL_SIZE, y, BLACK);
+                    DrawLine(x, y, x + CELL_SIZE, y, wall_color);
                 }
                 if (maze[i][j].walls & WALL_EAST) {
-                    DrawLine(x + CELL_SIZE, y, x + CELL_SIZE, y + CELL_SIZE, BLACK);
+                    DrawLine(x + CELL_SIZE, y, x + CELL_SIZE, y + CELL_SIZE, wall_color);
                 }
                 if (maze[i][j].walls & WALL_SOUTH) {
-                    DrawLine(x, y + CELL_SIZE, x + CELL_SIZE, y + CELL_SIZE, BLACK);
+                    DrawLine(x, y + CELL_SIZE, x + CELL_SIZE, y + CELL_SIZE, wall_color);
                 }
                 if (maze[i][j].walls & WALL_WEST) {
-                    DrawLine(x, y, x, y + CELL_SIZE, BLACK);
+                    DrawLine(x, y, x, y + CELL_SIZE, wall_color);
                 }
             }
         }

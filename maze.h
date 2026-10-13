@@ -11,6 +11,8 @@
 typedef struct {
     unsigned char walls; 
     int visited;
+    int is_passage;
+    int is_zigzag;
 } Cell;
 
 extern Cell maze[MAZE_SIZE][MAZE_SIZE];

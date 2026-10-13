@@ -43,7 +43,7 @@ unsigned char opp_walls[] = {WALL_SOUTH, WALL_NORTH, WALL_EAST, WALL_WEST};
 
 int dirs[] = {0, 1, 2, 3}; // 0: North, 1: South, 2: West, 3: East
 
-if (last_dir != -1 && rand() % 100 < 70) { //70 відсотків шансів продовжити в тому ж напрямку
+if (last_dir != -1 && rand() % 100 < 80) { //80 відсотків шансів продовжити в тому ж напрямку
     for (int i = 0; i < 4; i++) {
         if (dirs[i] == last_dir) {
             int temp = dirs[0];
@@ -75,6 +75,11 @@ for (int i = 0; i < 4; i++) {
     if (is_valid(nx, ny) && !maze[nx][ny].visited) {
         maze[x][y].walls &= ~walls[dirs[i]];
         maze[nx][ny].walls &= ~opp_walls[dirs[i]];
+
+        if (dirs[i] == last_dir) {
+        maze[x][y].is_passage = 1; // Позначаємо клітину як прохід
+        maze[nx][ny].is_passage = 1; // Позначаємо клітину як не зигзаг
+    }
         carve_passages(nx, ny, dirs[i]);
     }
     }
@@ -101,6 +106,152 @@ void add_loops(int extra_walls_to_remove) {
     }
 }
 
+/*void add_zigzag(int num_zigzag) {
+    for (int k = 0; k < num_zigzag; k++) {
+        int lenght = 8 + rand() % 8;
+        int dir = rand() % 2; // 0 - вправо-вниз 1 - влыво вниз
+
+        int curr_r = 2 + rand() % (MAZE_SIZE - lenght - 4); // початкова позиція в відсдступом від межів
+        int curr_c;
+        
+        if (dir == 0) {
+            curr_c = 2 + rand() % (MAZE_SIZE - lenght - 4);
+        } else {
+            curr_c = lenght + 2 + rand() % (MAZE_SIZE - lenght - 4);
+        }
+        if ((abs(curr_r - finish_r) < 5 && abs(curr_c - finish_c) < 5) || (curr_r< 4 && curr_c < 4)) {
+            continue;
+        }
+        for (int step = 0; step < lenght; step++) {
+            if (dir == 0) {
+                if (step % 2 == 0) {
+                    if (is_valid(curr_r, curr_c + 1)) {
+                        maze[curr_r][curr_c].walls &= ~WALL_EAST;
+                        maze[curr_r][curr_c + 1].walls &= ~WALL_WEST;
+                        maze[curr_r][curr_c].is_zigzag = 1; // Позначаємо клітину як зигзаг
+                        maze[curr_r][curr_c + 1].is_zigzag = 1;
+                        curr_c++;
+                    }
+                } else {
+                    if (is_valid(curr_r + 1, curr_c)) {
+                        maze[curr_r][curr_c].walls &= ~WALL_SOUTH;
+                        maze[curr_r + 1][curr_c].walls &= ~WALL_NORTH;
+                        maze[curr_r][curr_c].is_zigzag = 1; // Позначаємо клітину як зигзаг
+                        maze[curr_r][curr_c + 1].is_zigzag = 1;
+                        curr_r++;
+                    }
+                }
+                } else {
+                    if (step % 2 == 0) {
+                        if (is_valid(curr_r, curr_c - 1)) {
+                            maze[curr_r][curr_c].walls &= ~WALL_WEST;
+                            maze[curr_r][curr_c - 1].walls &= ~WALL_EAST;
+                            maze[curr_r][curr_c].is_zigzag = 1; // Позначаємо клітину як зигзаг
+                            maze[curr_r][curr_c - 1].is_zigzag = 1;
+                            curr_c--;
+                        }
+                    } else {
+                        if (is_valid(curr_r + 1, curr_c)) {
+                        maze[curr_r][curr_c].walls &= ~WALL_SOUTH; 
+                        maze[curr_r + 1][curr_c].walls &= ~WALL_NORTH;
+                        maze[curr_r][curr_c].is_zigzag = 1; // Позначаємо клітину як зигзаг
+                        maze[curr_r][curr_c + 1].is_zigzag = 1;
+                        curr_r++;
+                    }
+                }
+            }
+        }
+    }
+}*/
+
+void add_zigzag(int num_zigzag) {
+    for (int k = 0; k < num_zigzag; k++) {
+        // Робимо їх коротшими та акуратнішими (від 8 до 15 кроків)
+        int lenght = 8 + rand() % 8; 
+        
+        // Тепер 4 напрямки: 0: вниз-вправо, 1: вниз-вліво, 2: вверх-вправо, 3: вверх-вліво
+        int dir = rand() % 4; 
+
+        // Беремо випадкову стартову точку з відступом від країв
+        int curr_r = 4 + rand() % (MAZE_SIZE - 8);
+        int curr_c = 4 + rand() % (MAZE_SIZE - 8);
+
+        // Захист зони старта та фініша
+        if ((abs(curr_r - finish_r) < 5 && abs(curr_c - finish_c) < 5) || (curr_r < 4 && curr_c < 4)) {
+            continue;
+        }
+
+        for (int step = 0; step < lenght; step++) {
+            if (dir == 0) { // Вниз-вправо
+                if (step % 2 == 0) { // вправо
+                    if (is_valid(curr_r, curr_c + 1)) {
+                        maze[curr_r][curr_c].walls &= ~WALL_EAST;
+                        maze[curr_r][curr_c + 1].walls &= ~WALL_WEST;
+                        maze[curr_r][curr_c].is_zigzag = 1; maze[curr_r][curr_c + 1].is_zigzag = 1;
+                        curr_c++;
+                    }
+                } else { // вниз
+                    if (is_valid(curr_r + 1, curr_c)) {
+                        maze[curr_r][curr_c].walls &= ~WALL_SOUTH;
+                        maze[curr_r + 1][curr_c].walls &= ~WALL_NORTH;
+                        maze[curr_r][curr_c].is_zigzag = 1; maze[curr_r + 1][curr_c].is_zigzag = 1;
+                        curr_r++;
+                    }
+                }
+            } else if (dir == 1) { // Вниз-вліво
+                if (step % 2 == 0) { // вліво
+                    if (is_valid(curr_r, curr_c - 1)) {
+                        maze[curr_r][curr_c].walls &= ~WALL_WEST;
+                        maze[curr_r][curr_c - 1].walls &= ~WALL_EAST;
+                        maze[curr_r][curr_c].is_zigzag = 1; maze[curr_r][curr_c - 1].is_zigzag = 1;
+                        curr_c--;
+                    }
+                } else { // вниз
+                    if (is_valid(curr_r + 1, curr_c)) {
+                        maze[curr_r][curr_c].walls &= ~WALL_SOUTH;
+                        maze[curr_r + 1][curr_c].walls &= ~WALL_NORTH;
+                        maze[curr_r][curr_c].is_zigzag = 1; maze[curr_r + 1][curr_c].is_zigzag = 1;
+                        curr_r++;
+                    }
+                }
+            } else if (dir == 2) { // Вверх-вправо
+                if (step % 2 == 0) { // вправо
+                    if (is_valid(curr_r, curr_c + 1)) {
+                        maze[curr_r][curr_c].walls &= ~WALL_EAST;
+                        maze[curr_r][curr_c + 1].walls &= ~WALL_WEST;
+                        maze[curr_r][curr_c].is_zigzag = 1; maze[curr_r][curr_c + 1].is_zigzag = 1;
+                        curr_c++;
+                    }
+                } else { // вверх
+                    if (is_valid(curr_r - 1, curr_c)) {
+                        maze[curr_r][curr_c].walls &= ~WALL_NORTH;
+                        maze[curr_r - 1][curr_c].walls &= ~WALL_SOUTH;
+                        maze[curr_r][curr_c].is_zigzag = 1; maze[curr_r - 1][curr_c].is_zigzag = 1;
+                        curr_r--;
+                    }
+                }
+            } else if (dir == 3) { // Вверх-вліво
+                if (step % 2 == 0) { // вліво
+                    if (is_valid(curr_r, curr_c - 1)) {
+                        maze[curr_r][curr_c].walls &= ~WALL_WEST;
+                        maze[curr_r][curr_c - 1].walls &= ~WALL_EAST;
+                        maze[curr_r][curr_c].is_zigzag = 1; maze[curr_r][curr_c - 1].is_zigzag = 1;
+                        curr_c--;
+                    }
+                } else { // вверх
+                    if (is_valid(curr_r - 1, curr_c)) {
+                        maze[curr_r][curr_c].walls &= ~WALL_NORTH;
+                        maze[curr_r - 1][curr_c].walls &= ~WALL_SOUTH;
+                        maze[curr_r][curr_c].is_zigzag = 1; maze[curr_r - 1][curr_c].is_zigzag = 1;
+                        curr_r--;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 void init_maze()  {
     for (int i = 0; i < MAZE_SIZE; i++) {
         for (int j = 0; j < MAZE_SIZE; j++) {
@@ -112,7 +263,8 @@ void init_maze()  {
     srand(time(NULL));
     carve_passages (0, 0, -1); // Починаємо з верхнього лівого кута
 
-    add_loops(80); // Додаємо додаткові проходи для ускладнення лабіринту
+    add_loops(20); // Додаємо додаткові проходи 
+    add_zigzag(15); // Додаємо зигзаги 
 
     if (is_valid(0, 1)) {
         maze[0][0].walls &= ~WALL_EAST;
@@ -141,7 +293,11 @@ void print_maze() {
         for (int j = 0; j < MAZE_SIZE; j++) {
             if (i >= finish_r && i < finish_r + 2 && j >= finish_c && j < finish_c + 2) {
                 printf("\033[42m F \033[0m"); 
-            } else {
+            } else if (maze[i][j].is_zigzag) {
+                printf("\033[43m Z \033[0m"); // жовтий
+            } else if (maze[i][j].is_passage) {
+                printf("\033[41m P \033[0m"); // червоний
+        } else {
                 printf("   "); 
             }
             
