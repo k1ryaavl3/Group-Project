@@ -1,6 +1,6 @@
 #ifndef MOUSE_H
 #define MOUSE_H
-#define SENSOR_RANGE 3
+#define SENSOR_RANGE 1
 
 #include <stdbool.h>
 #include "maze.h"
@@ -9,6 +9,9 @@ typedef struct {
     int x;
     int y;
     int orientation;
+    float pos_x;
+    float pos_y;
+    float angle;
     int known_walls[MAZE_SIZE][MAZE_SIZE];
     bool visited[MAZE_SIZE][MAZE_SIZE];
 } Mouse;
