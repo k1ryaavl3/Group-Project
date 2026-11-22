@@ -38,9 +38,9 @@ else
 			CFLAGS = -Wall -Wextra -std=c11 -O2 -I. -Ilibraries -I"../Group Project/raylib/src"
 			LDFLAGS = -L"../Group Project/raylib/build/raylib" -Wl,-rpath,"../Group Project/raylib/build/raylib" -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 		else
-			CFLAGS = -Wall -Wextra -std=c11 -O2 -I. -Ilibraries -Ilibraries/raylib-master/src
-			LDFLAGS = -Llibraries/raylib-master/src -Wl,-rpath,libraries/raylib-master/src -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
-		endif
+			CFLAGS = -Wall -Wextra -std=c11 -O2 -I. -Ilibraries
+			LDFLAGS = -Llibraries -Wl,-rpath,libraries -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+	endif
 	endif
 endif
 
