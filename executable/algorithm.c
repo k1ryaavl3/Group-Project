@@ -144,7 +144,7 @@ static float vector_to_angle_deg(float dx, float dy) {
 }
 
 // ============================================================================
-// БЛОК 3: ПУБЛІЧНІ ФУНКЦІЇ АЛГОРИТМУ
+//                        ПУБЛІЧНІ ФУНКЦІЇ АЛГОРИТМУ
 // ============================================================================
 
 void algorithm_compute_distances(const Mouse *mouse, Point target, int dist[MAZE_SIZE][MAZE_SIZE]) {
@@ -389,7 +389,7 @@ bool algorithm_build_speedrun_plan(const Mouse *mouse, Point target, SpeedrunPla
         if (plan->count > 1 && fabsf(angle_diff) < 0.1f) {
             plan->points[plan->count - 1].x = raw_x[i];
             plan->points[plan->count - 1].y = raw_y[i];
-            // Суцільний зігзаг під 45° об'єднується в одну пряму, тому позначаємо як пряму ділянку
+            // Суцільний зигзаг під 45 градусів об'єднується в одну пряму, позначаємо як пряму ділянку
             plan->points[plan->count - 1].is_diagonal = false;
         } else if (plan->count < max_points) {
             plan->points[plan->count++] = (Waypoint){ raw_x[i], raw_y[i], angle, is_diag };
@@ -410,7 +410,7 @@ bool algorithm_step_speedrun(Mouse *mouse, SpeedrunPlan *plan, float step_distan
         Waypoint prev_wp = plan->points[plan->current_idx - 1];
         float seg_len = hypotf(target_wp.x - prev_wp.x, target_wp.y - prev_wp.y);
 
-        // Розганяємось як на ортогональних прямих, так і на прямих зігзагах під 45° (seg_len > 1.0f)
+        // Розганяємось як на прямих, так і на прямих зигзагах під 45 градусів
         if (seg_len > 1.0f) {
             float dist_done = fmaxf(0.0f, seg_len - dist);
             float max_boost = 1.0f + fminf((seg_len - 1.0f) * 0.35f, 1.8f);
