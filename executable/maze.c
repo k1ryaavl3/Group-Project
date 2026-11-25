@@ -115,7 +115,6 @@ static void add_loops(Maze *maze, int extra_walls_to_remove) {
     }
 }
 
-// НОВА ЛОГІКА ЗИГЗАГІВ: Працює на етапі ПОПЕРЕДНЬОЇ генерації
 static void add_zigzag(Maze *maze, uint8_t visited[MAZE_SIZE][MAZE_SIZE], int num_zigzag) {
     for (int k = 0; k < num_zigzag; k++) {
         int lenght = 8 + rand() % 8; 
@@ -134,7 +133,7 @@ static void add_zigzag(Maze *maze, uint8_t visited[MAZE_SIZE][MAZE_SIZE], int nu
         int actual_steps = 0;
 
         for (int step = 0; step < lenght; step++) {
-            visited[curr_r][curr_c] = 1; // Заливаємо «бетоном», щоб основний алгоритм сюди не заліз
+            visited[curr_r][curr_c] = 1; // Заливаємо "бетоном", щоб основний алгоритм сюди не заліз
             maze->cells[curr_r][curr_c].flags |= FLAG_ZIGZAG;
             actual_steps++;
 

@@ -6,10 +6,10 @@
 
 #define MAZE_SIZE 32
 
-#define WALL_NORTH 0x1
-#define WALL_EAST  0x2
-#define WALL_SOUTH 0x4
-#define WALL_WEST  0x8
+#define WALL_NORTH 1
+#define WALL_EAST  2
+#define WALL_SOUTH 4
+#define WALL_WEST  8
 
 #define WALL_N WALL_NORTH
 #define WALL_E WALL_EAST
@@ -26,7 +26,7 @@ typedef struct {
 
 typedef struct {
     uint8_t walls;
-    uint8_t flags; // Бітові прапорці замість 8 байтів під int is_passage / is_zigzag
+    uint8_t flags; // Бітові прапорці
 } Cell;
 
 typedef struct {
@@ -34,9 +34,8 @@ typedef struct {
     Point finish;
 } Maze;
 
-// Публічне API
 void init_maze(Maze *maze);
 int maze_get_walls(const Maze *maze, int x, int y);
 void print_maze(const Maze *maze);
 
-#endif // MAZE_H
+#endif

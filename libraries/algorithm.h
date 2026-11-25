@@ -17,6 +17,7 @@ typedef struct {
     bool is_diagonal;
 } Waypoint;
 
+
 typedef struct {
     Waypoint points[MAZE_SIZE * MAZE_SIZE];
     int count;
